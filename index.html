@@ -3,163 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Hero Academy: The Journey</title>
+    <title>Math Hero Academy | Dashboard</title>
     <style>
-        :root { --add: #4CAF50; --sub: #2196F3; --mul: #9c27b0; --div: #f44336; --tab: #ff9800; --frac: #795548; }
-        body { font-family: 'Comic Sans MS', cursive; background: #eef9ff; margin: 0; padding: 20px; text-align: center; }
+        :root { --primary: #4CAF50; --secondary: #2196F3; --accent: #ff9800; --dark: #2c3e50; }
+        body { font-family: 'Comic Sans MS', cursive; background: #f0faff; margin: 0; padding: 10px; }
         
-        /* Progression Sidebar */
-        .sidebar { position: fixed; left: 20px; top: 100px; background: white; padding: 15px; border-radius: 20px; border: 4px solid #333; display: flex; flex-direction: column; gap: 10px; box-shadow: 5px 5px 0 #ccc; }
-        .map-btn { padding: 12px; border-radius: 12px; border: 2px solid #ddd; cursor: not-allowed; opacity: 0.5; font-weight: bold; background: white; position: relative; }
-        .map-btn.unlocked { cursor: pointer; opacity: 1; border-color: #333; }
-        .map-btn.active { transform: scale(1.1); box-shadow: 0 0 10px rgba(0,0,0,0.2); z-index: 2; }
-        .lock-tag { font-size: 0.7rem; display: block; color: #666; }
-
-        .arena { max-width: 650px; margin: 0 auto; background: white; padding: 40px; border-radius: 40px; border: 8px solid #333; position: relative; }
-
-        /* Long Division UI */
-        .division-container { display: flex; justify-content: center; align-items: flex-end; font-family: monospace; font-size: 3rem; margin: 20px 0; }
-        .divisor { border-right: 4px solid #333; padding-right: 15px; margin-bottom: 5px; }
-        .dividend-box { border-top: 4px solid #333; padding: 10px 20px; border-top-left-radius: 10px; }
-
-        /* Standard Math Styles */
-        .math-text { font-size: 4.5rem; text-align: right; letter-spacing: 15px; font-family: 'Courier New', monospace; line-height: 1.1; margin-right: 15%; }
-        .ans-row { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
-        .digit { width: 60px; height: 80px; font-size: 3.5rem; text-align: center; border: 4px solid #333; border-radius: 15px; outline: none; }
+        .main-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
         
-        .cert-btn { background: gold; border: 2px solid #b8860b; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        /* Dashboard & Game */
+        .game-area { flex: 2; min-width: 300px; background: white; border-radius: 30px; border: 6px solid var(--primary); padding: 20px; text-align: center; }
+        
+        /* Leaderboard Sidebar */
+        .leaderboard { flex: 1; min-width: 250px; background: white; border-radius: 20px; border: 4px solid var(--accent); padding: 15px; height: fit-content; }
+        .lb-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; }
+        .lb-row.active { background: #fff9c4; font-weight: bold; }
+
+        /* Teacher Admin Panel */
+        .teacher-admin { width: 100%; max-width: 900px; margin: 40px auto; background: var(--dark); color: white; padding: 25px; border-radius: 20px; text-align: left; }
+        .admin-btn { background: var(--secondary); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; margin-right: 10px; }
+        .whatsapp-btn { background: #25D366; }
+
+        /* Existing Login & PIN styles from previous version... */
+        #pin-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+        .pin-card { background: white; padding: 30px; border-radius: 20px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div style="font-size: 2rem; margin-bottom: 20px;">⭐ <span id="star-display">0</span> Stars</div>
+    <div id="login-screen">
+        </div>
 
-    <div class="sidebar">
-        <button class="map-btn unlocked active" id="btn-add" onclick="setMode('add')">➕ Add</button>
-        <button class="map-btn" id="btn-sub" onclick="setMode('sub')">➖ Sub <span class="lock-tag">50 ⭐</span></button>
-        <button class="map-btn" id="btn-mul" onclick="setMode('mul')">✖️ Mul <span class="lock-tag">100 ⭐</span></button>
-        <button class="map-btn" id="btn-tab" onclick="setMode('tab')">🔢 Tab <span class="lock-tag">150 ⭐</span></button>
-        <button class="map-btn" id="btn-div" onclick="setMode('div')">➗ Div <span class="lock-tag">200 ⭐</span></button>
-        <button class="map-btn" id="btn-frac" onclick="setMode('frac')">🍰 Frac <span class="lock-tag">300 ⭐</span></button>
-    </div>
-
-    <div class="arena">
-        <h2 id="mode-title">Addition Level</h2>
-        
-        <div id="standard-view">
-            <div class="math-text" id="p-text">0000<br>+ 0000</div>
-            <div style="border-bottom: 6px solid #333; width: 70%; margin: 10px auto;"></div>
-            <div class="ans-row" id="answer-boxes">
+    <div id="dashboard" style="display:none;">
+        <div class="main-container">
+            <div class="game-area">
+                <h2 id="student-name-display">Hero: Aazam</h2>
+                <div style="font-size: 2rem; color: var(--accent);">⭐ <span id="current-stars">0</span></div>
+                <hr>
+                <div id="math-arena">
+                    <h3>Ready for today's challenge?</h3>
+                    <button class="admin-btn" onclick="addDemoStars()">Add 10 Stars (Test)</button>
                 </div>
-        </div>
-
-        <div id="division-view" style="display:none;">
-            <div class="division-container">
-                <div class="divisor" id="div-divisor">5</div>
-                <div class="dividend-box" id="div-dividend">250</div>
             </div>
-            <p>Result:</p>
-            <input type="number" id="div-ans" class="digit" style="width:150px;">
+
+            <div class="leaderboard">
+                <h3 style="color:var(--accent)">🏆 Class Rankings</h3>
+                <div id="leaderboard-list"></div>
+            </div>
         </div>
 
-        <button onclick="checkAnswer()" style="padding:15px 40px; font-size:1.5rem; background:#333; color:white; border-radius:20px; cursor:pointer;">Check!</button>
-        
-        <div id="cert-section" style="display:none;">
-            <button class="cert-btn" onclick="downloadLevelCert()">Download Level Certificate 🎓</button>
+        <div class="teacher-admin">
+            <h3>👨‍🏫 Teacher Administration Panel</h3>
+            <p>Download daily reports and share progress with parents.</p>
+            <button class="admin-btn" onclick="downloadExcel()">📊 Download Excel Report</button>
+            <button class="admin-btn whatsapp-btn" onclick="shareWhatsApp()">📱 Share on WhatsApp Group</button>
         </div>
     </div>
 
     <script>
-        let stars = parseInt(localStorage.getItem('mathStars')) || 0;
-        let mode = 'add';
-        let currentQ = { a: 0, b: 0, ans: 0 };
-        const locks = { sub: 50, mul: 100, tab: 150, div: 200, frac: 300 };
+        const studentNames = ["Aazam", "Priya", "Zayn", "Sofia", "Omar", "Maya", "Ken", "Elena", "Hassan", "Arjun"]; // Expand to 30
+        let currentStudent = "";
 
-        function updateUI() {
-            document.getElementById('star-display').innerText = stars;
-            Object.keys(locks).forEach(m => {
-                const btn = document.getElementById('btn-' + m);
-                if (stars >= locks[m]) {
-                    btn.classList.add('unlocked');
-                    btn.querySelector('.lock-tag').innerText = "🔓 Unlocked";
-                }
+        // Function to export Data to Excel (CSV)
+        function downloadExcel() {
+            let csvContent = "data:text/csv;charset=utf-8,Student Name,Stars Earned,Attempt Date\n";
+            
+            studentNames.forEach(name => {
+                let stars = localStorage.getItem('stars_' + name) || 0;
+                let date = new Date().toLocaleDateString();
+                csvContent += `${name},${stars},${date}\n`;
             });
-            // Show certificate button if high stars
-            document.getElementById('cert-section').style.display = stars > 20 ? 'block' : 'none';
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Math_Hero_Report_" + new Date().toLocaleDateString() + ".csv");
+            document.body.appendChild(link);
+            link.click();
         }
 
-        function setMode(m) {
-            if (m !== 'add' && stars < locks[m]) {
-                alert(`Earn ${locks[m]} stars to unlock this level!`);
-                return;
-            }
-            mode = m;
-            document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + m).classList.add('active');
+        // Function to share via WhatsApp
+        function shareWhatsApp() {
+            let message = "*🌟 Math Hero Academy - Daily Progress Report 🌟*\n\n";
+            studentNames.forEach(name => {
+                let stars = localStorage.getItem('stars_' + name) || 0;
+                if(stars > 0) message += `👤 *${name}*: ${stars} Stars ✅\n`;
+            });
             
-            document.getElementById('standard-view').style.display = m === 'div' ? 'none' : 'block';
-            document.getElementById('division-view').style.display = m === 'div' ? 'block' : 'none';
-            
-            generateQuestion();
+            message += "\nGreat job today, heroes! 🚀";
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
         }
 
-        function generateQuestion() {
-            const container = document.getElementById('answer-boxes');
-            container.innerHTML = '';
+        // Leaderboard logic
+        function updateLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            list.innerHTML = "";
             
-            if (mode === 'add') {
-                currentQ.a = Math.floor(Math.random() * 9000) + 1000;
-                currentQ.b = Math.floor(Math.random() * 9000) + 1000;
-                currentQ.ans = currentQ.a + currentQ.b;
-                document.getElementById('p-text').innerHTML = `${currentQ.a}<br>+ ${currentQ.b}`;
-                createBoxes(currentQ.ans.toString().length);
-            } else if (mode === 'div') {
-                currentQ.b = Math.floor(Math.random() * 8) + 2; // Divisor
-                currentQ.ans = Math.floor(Math.random() * 50) + 10; // Quotient
-                currentQ.a = currentQ.b * currentQ.ans; // Dividend
-                document.getElementById('div-divisor').innerText = currentQ.b;
-                document.getElementById('div-dividend').innerText = currentQ.a;
-            }
-            // Add Sub/Mul/Frac logic here similarly...
-        }
+            let data = studentNames.map(name => ({
+                name: name,
+                stars: parseInt(localStorage.getItem('stars_' + name)) || 0
+            })).sort((a, b) => b.stars - a.stars);
 
-        function createBoxes(count) {
-            const container = document.getElementById('answer-boxes');
-            let boxArray = [];
-            for (let i = 0; i < count; i++) {
-                const input = document.createElement('input');
-                input.className = 'digit';
-                input.maxLength = 1;
-                input.id = 'box-' + i;
-                container.prepend(input); // Add ones place first for RTL
-                boxArray.push(input);
-            }
-            // RTL Auto-focus
-            boxArray.forEach((b, i) => {
-                b.addEventListener('input', () => { if(b.value && i < count-1) boxArray[i+1].focus(); });
+            data.forEach((student, index) => {
+                const row = document.createElement('div');
+                row.className = `lb-row ${student.name === currentStudent ? 'active' : ''}`;
+                row.innerHTML = `<span>${index + 1}. ${student.name}</span><span>${student.stars} ⭐</span>`;
+                list.appendChild(row);
             });
         }
 
-        function checkAnswer() {
-            let userVal;
-            if (mode === 'div') {
-                userVal = parseInt(document.getElementById('div-ans').value);
-            } else {
-                const inputs = Array.from(document.querySelectorAll('.digit')).reverse();
-                userVal = parseInt(inputs.map(i => i.value).join(''));
-            }
-
-            if (userVal === currentQ.ans) {
-                stars += 10;
-                localStorage.setItem('mathStars', stars);
-                alert("🌟 GREAT JOB!");
-                updateUI();
-                generateQuestion();
-            } else {
-                alert("❌ Try again!");
-            }
+        // Mock function for demo
+        function addDemoStars() {
+            let s = parseInt(localStorage.getItem('stars_' + currentStudent)) || 0;
+            s += 10;
+            localStorage.setItem('stars_' + currentStudent, s);
+            document.getElementById('current-stars').innerText = s;
+            updateLeaderboard();
         }
 
+        // Set Aazam as default for demo purposes
+        currentStudent = "Aazam";
+        document.getElementById('dashboard').style.display = "block";
+        updateLeaderboard();
+    </script>
+</body>
+</html>
+        
         updateUI();
         generateQuestion();
     </script>
