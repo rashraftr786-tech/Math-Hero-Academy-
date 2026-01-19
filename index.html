@@ -3,58 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Math Adventure World - PS Pethgam Wagoora</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Pangolin&display=swap" rel="stylesheet">
+    <title>Math Adventure World - Mohammad Ashraf Rather</title>
+    <style>
+        /* --- VIBRANT SENSORY STYLING --- */
+        :root {
+            --sky: #4fc3f7;
+            --grass: #66bb6a;
+            --btn-pink: #ff4081;
+            --card-white: rgba(255, 255, 255, 0.95);
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            overflow: hidden; background: var(--sky);
+        }
+
+        #master-app {
+            display: flex; flex-direction: column; height: 100vh; width: 100vw;
+        }
+
+        /* Top HUD */
+        .hud {
+            background: white; padding: 10px; display: flex; 
+            justify-content: space-between; align-items: center;
+            border-bottom: 5px solid #ddd; z-index: 10;
+        }
+
+        /* THEMES */
+        .theme-home { background: #ffcc80; }
+        .theme-addition { background: linear-gradient(to bottom, #81d4fa, #a5d6a7); }
+        .theme-subtraction { background: linear-gradient(to bottom, #ffecb3, #8d6e63); }
+
+        /* SCREENS */
+        .screen { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; position: relative; }
+        .hidden { display: none !important; }
+
+        /* WELCOME CHARACTER */
+        .character-box { text-align: center; margin-bottom: 20px; }
+        .pencil-wave { font-size: 80px; animation: wave 2s infinite; display: inline-block; }
+        @keyframes wave { 0%, 100% { transform: rotate(-15deg); } 50% { transform: rotate(15deg) translateY(-10px); } }
+        
+        .bubble { 
+            background: white; border-radius: 20px; padding: 15px; 
+            border: 3px solid var(--btn-pink); font-weight: bold; font-size: 1.2rem;
+        }
+
+        /* LARGE BUTTONS */
+        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 400px; }
+        .op-btn {
+            height: 100px; border: none; border-radius: 20px; color: white;
+            font-size: 1.2rem; font-weight: bold; cursor: pointer;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.2); transition: 0.1s;
+        }
+        .op-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+        .btn-add { background: #ff4081; } .btn-sub { background: #4caf50; }
+        .btn-mul { background: #ff9800; } .btn-div { background: #2196f3; }
+
+        /* GAMEPLAY ELEMENTS */
+        .question-card {
+            background: var(--card-white); border-radius: 25px; padding: 20px;
+            width: 85%; text-align: center; box-shadow: 0 10px 0 rgba(0,0,0,0.1);
+            margin-bottom: 20px; border: 4px solid #ff4081;
+        }
+
+        .source-box { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .item-sprite { font-size: 60px; cursor: pointer; filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.1)); }
+        
+        .basket {
+            width: 280px; min-height: 150px; background: rgba(255,255,255,0.4);
+            border: 6px dashed white; border-radius: 20px 20px 80px 80px;
+            display: flex; flex-wrap: wrap; justify-content: center; padding: 15px; gap: 5px;
+        }
+
+        /* POPUP */
+        .overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 100;
+        }
+        .win-card { background: white; padding: 30px; border-radius: 30px; text-align: center; border: 8px solid #ffeb3b; }
+
+        .footer { background: white; text-align: center; padding: 10px; font-size: 0.8rem; border-top: 4px solid var(--btn-pink); }
+    </style>
 </head>
-<body>
+<body class="theme-home">
 
-    <div id="master-container">
-        <header class="game-header">
-            <div class="stat-pill">⭐ <span id="star-count">0</span></div>
-            <div class="progress-bar-bg"><div id="progress-fill"></div></div>
-            <button class="home-btn" onclick="showHome()">🏠 Home</button>
-        </header>
-
-        <section id="home-page" class="screen">
-            <div class="hero-character">
-                <div class="pencil-character">✏️</div>
-                <div class="welcome-bubble">Hi! I'm Penny Pencil! Let's play!</div>
-            </div>
-            <div class="zone-grid">
-                <button class="zone-card addition" onclick="startZone('addition')">
-                    <span class="icon">🌈</span> Addition
-                </button>
-                <button class="zone-card subtraction" onclick="startZone('subtraction')">
-                    <span class="icon">🍎</span> Subtraction
-                </button>
-                <button class="zone-card multiplication" onclick="startZone('multiplication')">
-                    <span class="icon">🧸</span> Multiplication
-                </button>
-                <button class="zone-card division" onclick="startZone('division')">
-                    <span class="icon">🐠</span> Division
-                </button>
-            </div>
-        </section>
-
-        <section id="game-stage" class="screen hidden">
-            <div class="instruction-bar"><h2 id="task-text">Level 1: Rainbow Addition</h2></div>
-            <div id="play-area"></div>
-        </section>
-
-        <div id="success-overlay" class="hidden">
-            <div class="popup">
-                <h2>🎉 Great Job! 🎉</h2>
-                <p>You completed the level!</p>
-                <button onclick="nextLevel()">Next Challenge ➔</button>
-            </div>
+    <div id="master-app">
+        <div class="hud">
+            <div style="font-size: 1.5rem;">⭐ <span id="stars">0</span></div>
+            <button onclick="goHome()" style="padding: 10px 20px; border-radius: 10px;">🏠 Home</button>
         </div>
 
-        <footer class="credits">
-            Designed & Developed by <strong>Mohammad Ashraf Rather</strong> | PS Pethgam Wagoora
+        <section id="screen-home" class="screen">
+            <div class="character-box">
+                <div class="pencil-wave">✏️</div>
+                <div class="bubble">Hi! I'm Penny Pencil!<br>Choose an adventure!</div>
+            </div>
+            <div class="grid-menu">
+                <button class="op-btn btn-add" onclick="startOp('addition')">🌈 Addition</button>
+                <button class="op-btn btn-sub" onclick="startOp('subtraction')">🍎 Subtraction</button>
+                <button class="op-btn btn-mul" onclick="startOp('multiplication')">🧸 Multiplication</button>
+                <button class="op-btn btn-div" onclick="startOp('division')">🐠 Division</button>
+            </div>
+        </section>
+
+        <section id="screen-game" class="screen hidden">
+            <div class="question-card">
+                <h2 id="level-text" style="margin:0; color:#5d4037;">Level 1</h2>
+                <h1 id="math-task" style="margin:5px 0; font-size: 2rem;">3 + 2 = ?</h1>
+            </div>
+            <div id="item-source" class="source-box"></div>
+            <div id="game-basket" class="basket"></div>
+        </section>
+
+        <footer class="footer">
+            Designed & Developed by <strong>Mohammad Ashraf Rather</strong><br>
+            Teacher, PS Pethgam Wagoora
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <div id="win-popup" class="overlay hidden">
+        <div class="win-card">
+            <h1 style="font-size: 3rem; margin:0;">🎉</h1>
+            <h2>Great Job!</h2>
+            <p id="win-msg">You are a Math Hero!</p>
+            <button onclick="nextLevel()" style="font-size: 1.2rem; padding: 10px 30px; background: #4caf50; color: white; border: none; border-radius: 15px;">Next Level ➔</button>
+        </div>
+    </div>
+
+    <script>
+        let state = {
+            stars: 0,
+            op: 'addition',
+            level: 1,
+            num1: 0, num2: 0, target: 0, icon: '🍬'
+        };
+
+        function goHome() {
+            document.getElementById('screen-home').classList.remove('hidden');
+            document.getElementById('screen-game').classList.add('hidden');
+            document.body.className = 'theme-home';
+        }
+
+        function startOp(op) {
+            state.op = op;
+            state.level = 1;
+            document.getElementById('screen-home').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            document.body.className = 'theme-' + op;
+            loadChallenge();
+        }
+
+        function loadChallenge() {
+            // Reset gameplay area
+            document.getElementById('item-source').innerHTML = '';
+            document.getElementById('game-basket').innerHTML = '';
+            document.getElementById('win-popup').classList.add('hidden');
+
+            // Difficulty Logic
+            state.num1 = Math.floor(Math.random() * (state.level * 2)) + 1;
+            state.num2 = Math.floor(Math.random() * 3) + 1;
+            
+            let symbol = '+';
+            if(state.op === 'addition') {
+                state.target = state.num1 + state.num2;
+                state.icon = '🍬'; symbol = '+';
+            } else {
+                state.num1 = state.num1 + 5; // ensure positive
+                state.target = state.num1 - state.num2;
+                state.icon = '🍎'; symbol = '-';
+            }
+
+            document.getElementById('level-text').innerText = "Level " + state.level;
+            document.getElementById('math-task').innerText = `${state.num1} ${symbol} ${state.num2} = ?`;
+
+            // Create clickable items
+            for(let i=0; i < state.target; i++) {
+                let s = document.createElement('div');
+                s.className = 'item-sprite';
+                s.innerText = state.icon;
+                s.onclick = function() {
+                    document.getElementById('game-basket').appendChild(this);
+                    checkWin();
+                };
+                document.getElementById('item-source').appendChild(s);
+            }
+        }
+
+        function checkWin() {
+            let inBasket = document.getElementById('game-basket').children.length;
+            if(inBasket === state.target) {
+                setTimeout(() => {
+                    document.getElementById('win-popup').classList.remove('hidden');
+                    state.stars += 10;
+                    document.getElementById('stars').innerText = state.stars;
+                }, 400);
+            }
+        }
+
+        function nextLevel() {
+            state.level++;
+            loadChallenge();
+        }
+    </script>
 </body>
 </html>
