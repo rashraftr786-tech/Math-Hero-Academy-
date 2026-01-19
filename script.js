@@ -1,73 +1,57 @@
-let state = {
-    stars: 0,
-    progress: 0,
-    currentWorld: 'candy-garden'
-};
+let currentScore = 0;
+let level = 1;
 
-function changeWorld(world) {
-    state.currentWorld = world;
-    document.getElementById('game-world').className = world;
-    initLevel();
+function showHome() {
+    document.getElementById('home-page').classList.remove('hidden');
+    document.getElementById('game-stage').classList.add('hidden');
 }
 
-function initLevel() {
-    const stage = document.getElementById('interactive-stage');
-    const prompt = document.getElementById('task-prompt');
-    stage.innerHTML = '';
+function startZone(zone) {
+    document.getElementById('home-page').classList.add('hidden');
+    document.getElementById('game-stage').classList.remove('hidden');
+    document.getElementById('game-stage').className = 'screen theme-' + zone;
+    
+    setupLevel(zone);
+}
 
-    if (state.currentWorld === 'candy-garden') {
-        let a = Math.floor(Math.random() * 4) + 1;
-        let b = Math.floor(Math.random() * 4) + 1;
-        let total = a + b;
+function setupLevel(zone) {
+    const area = document.getElementById('play-area');
+    const task = document.getElementById('task-text');
+    area.innerHTML = '';
+
+    if (zone === 'addition') {
+        task.innerText = "Rainbow Land: Add 3 + 2";
+        const target = 5;
         
-        prompt.innerText = `Put ${a} + ${b} Candies in the Basket!`;
-
-        // Create Candy Holding Area
-        const candyArea = document.createElement('div');
-        candyArea.className = 'candy-container';
-
-        // Create the Basket
+        // Create Basket
         const basket = document.createElement('div');
-        basket.className = 'basket-sprite';
-        basket.id = 'target-basket';
+        basket.className = 'target-basket';
+        basket.id = 'basket';
 
-        for (let i = 0; i < total; i++) {
-            const candy = document.createElement('div');
-            candy.className = 'candy-sprite';
-            candy.innerText = '🍬';
-            candy.onclick = () => {
-                basket.appendChild(candy);
-                checkWin(total);
+        // Create 5 Bouncing Numbers/Items
+        for(let i=0; i<target; i++) {
+            const item = document.createElement('div');
+            item.className = 'math-item';
+            item.innerText = '🍎'; // Can change based on level
+            item.onclick = () => {
+                basket.appendChild(item);
+                if(basket.children.length === target) triggerWin();
             };
-            candyArea.appendChild(candy);
+            area.appendChild(item);
         }
-
-        stage.appendChild(candyArea);
-        stage.appendChild(basket);
+        area.appendChild(basket);
     }
 }
 
-function checkWin(target) {
-    const current = document.getElementById('target-basket').children.length;
-    if (current === target) {
-        state.stars++;
-        state.progress += 20;
-        document.getElementById('star-count').innerText = state.stars;
-        document.getElementById('progress-fill').style.width = (state.progress % 105) + "%";
-        
-        document.getElementById('task-prompt').innerText = "YUMMY! CORRECT! 🌸";
-        
-        setTimeout(() => {
-            if (state.progress >= 100) {
-                alert("Level Up! Moving to Fruit Shop!");
-                changeWorld('fruit-shop');
-                state.progress = 0;
-            } else {
-                initLevel();
-            }
-        }, 1500);
-    }
+function triggerWin() {
+    document.getElementById('success-overlay').classList.remove('hidden');
+    currentScore += 10;
+    document.getElementById('star-count').innerText = currentScore;
+    document.getElementById('progress-fill').style.width = (currentScore % 100) + '%';
 }
 
-// Initial Load
-window.onload = () => initLevel();
+function nextLevel() {
+    document.getElementById('success-overlay').classList.add('hidden');
+    // Logic to increment level difficulty...
+    showHome(); 
+}
