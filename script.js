@@ -1,109 +1,97 @@
-const state = {
+const gameState = {
     stars: 0,
-    currentTheme: 'candy-garden',
-    level: 1,
-    targetScore: 5
+    progress: 0,
+    currentWorld: 'candy-garden'
 };
 
-// Start Game
-window.onload = () => {
-    switchTheme('candy-garden');
-};
-
-function switchTheme(theme) {
-    state.currentTheme = theme;
-    document.getElementById('game-container').className = `theme-${theme}`;
-    loadLevel();
+function switchWorld(world) {
+    gameState.currentWorld = world;
+    document.getElementById('game-container').className = `theme-${world}`;
+    initLevel();
 }
 
-function loadLevel() {
-    const zone = document.getElementById('interactive-zone');
-    zone.innerHTML = ''; // Clear previous
-    
-    if (state.currentTheme === 'candy-garden') {
-        setupAddition();
-    } else if (state.currentTheme === 'fruit-shop') {
-        setupSubtraction();
+function initLevel() {
+    const playArea = document.getElementById('play-area');
+    const instruction = document.getElementById('task-instruction');
+    playArea.innerHTML = '';
+
+    if (gameState.currentWorld === 'candy-garden') {
+        setupAddition(instruction, playArea);
+    } else if (gameState.currentWorld === 'fruit-shop') {
+        setupSubtraction(instruction, playArea);
     }
 }
 
-// --- CANDY GARDEN LOGIC ---
-function setupAddition() {
-    const a = Math.floor(Math.random() * 5) + 1;
-    const b = Math.floor(Math.random() * 5) + 1;
-    const answer = a + b;
+// LEVEL 1: Candy Garden Addition
+function setupAddition(instruction, area) {
+    const a = 2, b = 3;
+    instruction.innerText = `Move ${a} + ${b} candies into the basket!`;
 
-    document.getElementById('question-text').innerText = `Add the Candies: ${a} + ${b}`;
-
-    // Create a target basket
-    const targetBasket = document.createElement('div');
-    targetBasket.className = 'basket';
-    targetBasket.id = 'target-basket';
-    targetBasket.ondragover = (e) => e.preventDefault();
-    targetBasket.ondrop = handleDrop;
-
-    // Create Candies
-    for (let i = 0; i < answer; i++) {
-        const candy = document.createElement('span');
-        candy.className = 'candy-item';
-        candy.innerText = '🍬';
-        candy.draggable = true;
-        candy.id = `candy-${i}`;
-        candy.ondragstart = (e) => e.dataTransfer.setData("text", e.target.id);
-        document.getElementById('interactive-zone').appendChild(candy);
-    }
-    
-    document.getElementById('interactive-zone').appendChild(targetBasket);
-
-    function handleDrop(e) {
-        e.preventDefault();
+    const basket = document.createElement('div');
+    basket.className = 'basket-zone';
+    basket.id = 'basket';
+    basket.ondragover = (e) => e.preventDefault();
+    basket.ondrop = (e) => {
         const id = e.dataTransfer.getData("text");
-        targetBasket.appendChild(document.getElementById(id));
-        
-        // Check if basket has correct amount
-        const currentInBasket = targetBasket.getElementsByClassName('candy-item').length;
-        if (currentInBasket === answer) {
-            winRound("🌸");
-        }
-    }
-}
-
-// --- FRUIT SHOP LOGIC (Regrouping Concept) ---
-
-function setupSubtraction() {
-    document.getElementById('question-text').innerText = "Regroup the 10s to subtract!";
-    const zone = document.getElementById('interactive-zone');
-
-    // Create a 'Ten' bundle
-    const tenBlock = document.createElement('div');
-    tenBlock.style.cssText = "padding:20px; background:#fb8c00; border-radius:10px; cursor:pointer;";
-    tenBlock.innerText = "📦 Ten Apples (Click to Break)";
-    
-    tenBlock.onclick = () => {
-        tenBlock.classList.add('basket-shake');
-        setTimeout(() => {
-            tenBlock.remove();
-            // Create 10 single apples
-            for(let i=0; i<10; i++) {
-                const apple = document.createElement('span');
-                apple.innerText = '🍎';
-                apple.style.fontSize = '2rem';
-                zone.appendChild(apple);
-            }
-            document.getElementById('question-text').innerText = "Now remove 3 apples!";
-        }, 500);
+        basket.appendChild(document.getElementById(id));
+        checkScore(basket, a + b);
     };
 
-    zone.appendChild(tenBlock);
+    // Create 5 Huge Candies
+    for(let i=0; i < (a+b); i++) {
+        const candy = document.createElement('div');
+        candy.className = 'game-object';
+        candy.innerText = '🍬';
+        candy.draggable = true;
+        candy.id = 'c' + i;
+        candy.ondragstart = (e) => e.dataTransfer.setData("text", e.target.id);
+        area.appendChild(candy);
+    }
+    area.appendChild(basket);
 }
 
-function winRound(symbol) {
-    const zone = document.getElementById('interactive-zone');
-    zone.innerHTML = `<div class="flower-bloom">${symbol}</div>`;
+// LEVEL 3: Fruit Shop Subtraction (Borrowing)
+function setupSubtraction(instruction, area) {
+    instruction.innerText = "Click the '10' box to break it into small apples!";
     
-    state.stars += 1;
-    document.getElementById('stars').innerText = state.stars;
-    document.getElementById('progress-bar').style.width = (state.stars * 20) + "%";
+    const tenBox = document.createElement('div');
+    tenBox.className = 'game-object';
+    tenBox.style.background = '#E67E22';
+    tenBox.style.padding = '20px';
+    tenBox.style.borderRadius = '15px';
+    tenBox.innerText = '📦 10';
 
-    setTimeout(loadLevel, 2000);
+    tenBox.onclick = () => {
+        tenBox.style.display = 'none';
+        // Visual Regrouping: 10 apples appear
+        for(let i=0; i<10; i++) {
+            const apple = document.createElement('div');
+            apple.className = 'game-object bloom-animation';
+            apple.innerText = '🍎';
+            apple.onclick = () => apple.remove(); // Child 'eats' the apple to subtract
+            area.appendChild(apple);
+        }
+        instruction.innerText = "Subtraction! Tap the apples to take them away.";
+    };
+    area.appendChild(tenBox);
 }
+
+function checkScore(container, target) {
+    const count = container.getElementsByClassName('game-object').length;
+    if (count === target) {
+        // Success Sensory Feedback
+        container.innerHTML = '<div class="game-object bloom-animation">🌸</div>';
+        gameState.stars += 1;
+        gameState.progress += 20;
+        document.getElementById('star-count').innerText = gameState.stars;
+        document.getElementById('progress-bar').style.width = gameState.progress + '%';
+        
+        setTimeout(() => {
+            alert("Excellent Work!");
+            initLevel();
+        }, 1000);
+    }
+}
+
+// Initialize on Load
+window.onload = () => switchWorld('candy-garden');
