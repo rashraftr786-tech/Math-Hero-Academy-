@@ -1,94 +1,110 @@
 :root {
-    --pink: #ff6b81;
-    --brown: #5d4037;
-    --grass: #2ecc71;
+    --primary-sky: #4fc3f7;
+    --grass-green: #66bb6a;
+    --candy-pink: #ff4081;
+    --wood-brown: #795548;
 }
+
+* { box-sizing: border-box; }
 
 body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Fredoka One', cursive;
     overflow: hidden;
-    font-family: 'Arial Rounded MT Bold', sans-serif;
 }
 
-#game-container {
+#app-container {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #87CEEB; /* Sky Blue */
-    background: linear-gradient(#87CEEB, #e1f5fe);
+    background: var(--primary-sky);
 }
 
-/* Garden Background Elements */
-.theme-candy-garden #stage {
-    background-image: url('https://img.freepik.com/free-vector/nature-forest-landscape-background_1308-72643.jpg'); /* Substitute with local garden image */
-    background-size: cover;
-    background-position: bottom;
-}
-
-.game-ui {
+/* HUD Styling */
+.game-hud {
+    background: rgba(255, 255, 255, 0.9);
     padding: 10px;
-    background: rgba(255,255,255,0.9);
-    z-index: 10;
-}
-
-.top-row {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 4px solid rgba(0,0,0,0.1);
 }
 
-#question-card {
-    background: white;
-    margin: 10px auto;
-    padding: 15px;
-    border-radius: 20px;
-    width: 80%;
-    text-align: center;
-    box-shadow: 0 8px 0 rgba(0,0,0,0.1);
-    border: 4px solid var(--pink);
+.hud-item { font-size: 1.5rem; color: #333; }
+
+.progress-box {
+    width: 150px; height: 20px;
+    background: #e0e0e0; border-radius: 10px; overflow: hidden;
 }
 
-#task-text {
-    font-size: 1.8rem;
-    margin: 0;
-    color: var(--brown);
+#progress-fill {
+    width: 0%; height: 100%;
+    background: #ffeb3b; transition: width 0.5s;
 }
 
-#play-area {
+/* Garden World */
+.candy-garden {
     flex-grow: 1;
+    background: linear-gradient(to bottom, #81d4fa 0%, #81d4fa 60%, #a5d6a7 60%, #66bb6a 100%);
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
 }
 
-.basket-zone {
-    width: 280px;
-    height: 180px;
-    background: rgba(255,255,255,0.4);
-    border: 6px dashed var(--brown);
-    border-radius: 20px;
+.instruction-bubble {
+    background: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    margin-top: 20px;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+    border: 4px solid var(--candy-pink);
+    z-index: 5;
+}
+
+#task-prompt { margin: 0; color: var(--wood-brown); font-size: 1.4rem; }
+
+/* Interactive Objects */
+#interactive-stage {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.candy-container { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+
+.candy-sprite {
+    font-size: 4.5rem; /* Larger scale */
+    cursor: pointer;
+    filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.2));
+    transition: 0.2s;
+}
+
+.candy-sprite:active { transform: scale(1.3); }
+
+.basket-sprite {
+    width: 320px;
+    height: 200px;
+    background: #8d6e63;
+    border: 8px solid #5d4037;
+    border-radius: 20px 20px 80px 80px;
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 10px;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
-.candy-obj {
-    font-size: 4rem; /* Massive for sensory appeal */
-    cursor: pointer;
-    filter: drop-shadow(2px 4px 0px rgba(0,0,0,0.2));
-    margin: 5px;
-    transition: transform 0.2s;
+/* Credits Bar */
+.bottom-bar { background: #fff; padding: 10px; border-top: 5px solid var(--candy-pink); }
+.world-nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 5px; }
+.world-nav button {
+    padding: 10px 15px; border: none; border-radius: 10px;
+    background: var(--candy-pink); color: white; font-family: inherit; font-size: 1rem;
 }
 
-.credits {
-    background: white;
-    text-align: center;
-    padding: 10px;
-    font-size: 0.8rem;
-    border-top: 3px solid var(--pink);
-}
-    
+.credits { text-align: center; font-size: 0.8rem; line-height: 1.4; color: #555; }
