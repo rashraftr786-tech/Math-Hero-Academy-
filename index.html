@@ -8,29 +8,28 @@
 </head>
 <body>
     <div id="game-container" class="theme-candy-garden">
-        <header>
-            <div class="stats-bar">
-                <div class="stat-item">⭐ Stars: <span id="stars">0</span></div>
-                <div class="progress-container">
+        <header class="game-header">
+            <div class="stats">
+                <div class="stat-card">⭐ <span id="star-count">0</span></div>
+                <div class="progress-wrapper">
                     <div id="progress-bar"></div>
                 </div>
-                <div class="stat-item">Level: <span id="level-display">1</span></div>
             </div>
-            <nav id="theme-selector">
-                <button onclick="switchTheme('candy-garden')">Garden</button>
-                <button onclick="switchTheme('fruit-shop')">Fruit Shop</button>
-                <button onclick="switchTheme('toy-factory')">Toy Factory</button>
-                <button onclick="switchTheme('underwater')">Ocean</button>
+            <nav class="world-nav">
+                <button onclick="switchWorld('candy-garden')">🍭 Garden</button>
+                <button onclick="switchWorld('fruit-shop')">🍎 Shop</button>
+                <button onclick="switchWorld('toy-factory')">🧸 Factory</button>
+                <button onclick="switchWorld('underwater')">🐠 Ocean</button>
             </nav>
         </header>
 
-        <main id="play-area">
-            <h1 id="question-text">Welcome to Math Garden!</h1>
-            <div id="interactive-zone">
+        <main id="game-world">
+            <h1 id="task-instruction">Loading Adventure...</h1>
+            <div id="play-area">
                 </div>
         </main>
 
-        <footer class="game-footer">
+        <footer class="designer-credit">
             <p>Designed and Developed by <strong>Mohammad Ashraf Rather</strong></p>
             <p>Teacher, PS Pethgam Wagoora</p>
         </footer>
@@ -39,4 +38,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-            
