@@ -3,40 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Math Garden - PS Pethgam Wagoora</title>
+    <title>Math Adventure World - PS Pethgam Wagoora</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Pangolin&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="app-container">
-        <div class="game-hud">
-            <div class="hud-item">⭐ <span id="star-count">0</span></div>
-            <div class="hud-item progress-box">
-                <div id="progress-fill"></div>
+
+    <div id="master-container">
+        <header class="game-header">
+            <div class="stat-pill">⭐ <span id="star-count">0</span></div>
+            <div class="progress-bar-bg"><div id="progress-fill"></div></div>
+            <button class="home-btn" onclick="showHome()">🏠 Home</button>
+        </header>
+
+        <section id="home-page" class="screen">
+            <div class="hero-character">
+                <div class="pencil-character">✏️</div>
+                <div class="welcome-bubble">Hi! I'm Penny Pencil! Let's play!</div>
             </div>
-            <div class="hud-item">Lv <span id="level-display">1</span></div>
+            <div class="zone-grid">
+                <button class="zone-card addition" onclick="startZone('addition')">
+                    <span class="icon">🌈</span> Addition
+                </button>
+                <button class="zone-card subtraction" onclick="startZone('subtraction')">
+                    <span class="icon">🍎</span> Subtraction
+                </button>
+                <button class="zone-card multiplication" onclick="startZone('multiplication')">
+                    <span class="icon">🧸</span> Multiplication
+                </button>
+                <button class="zone-card division" onclick="startZone('division')">
+                    <span class="icon">🐠</span> Division
+                </button>
+            </div>
+        </section>
+
+        <section id="game-stage" class="screen hidden">
+            <div class="instruction-bar"><h2 id="task-text">Level 1: Rainbow Addition</h2></div>
+            <div id="play-area"></div>
+        </section>
+
+        <div id="success-overlay" class="hidden">
+            <div class="popup">
+                <h2>🎉 Great Job! 🎉</h2>
+                <p>You completed the level!</p>
+                <button onclick="nextLevel()">Next Challenge ➔</button>
+            </div>
         </div>
 
-        <div id="game-world" class="candy-garden">
-            <div class="instruction-bubble">
-                <h2 id="task-prompt">Loading...</h2>
-            </div>
-
-            <div id="interactive-stage">
-                </div>
-        </div>
-
-        <div class="bottom-bar">
-            <div class="world-nav">
-                <button onclick="changeWorld('candy-garden')">🍭 Garden</button>
-                <button onclick="changeWorld('fruit-shop')">🍎 Shop</button>
-                <button onclick="changeWorld('toy-factory')">🧸 Factory</button>
-            </div>
-            <div class="credits">
-                Designed & Developed by <strong>Mohammad Ashraf Rather</strong><br>
-                Teacher, PS Pethgam Wagoora
-            </div>
-        </div>
+        <footer class="credits">
+            Designed & Developed by <strong>Mohammad Ashraf Rather</strong> | PS Pethgam Wagoora
+        </footer>
     </div>
 
     <script src="script.js"></script>
