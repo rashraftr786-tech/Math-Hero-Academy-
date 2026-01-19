@@ -5,36 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Math Garden - PS Pethgam Wagoora</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="game-container" class="theme-candy-garden">
-        <header class="game-ui">
-            <div class="top-row">
-                <div class="stat-bubble">⭐ <span id="star-count">0</span></div>
-                <div class="nav-buttons">
-                    <button onclick="switchWorld('candy-garden')">Garden</button>
-                    <button onclick="switchWorld('fruit-shop')">Shop</button>
-                </div>
+    <div id="app-container">
+        <div class="game-hud">
+            <div class="hud-item">⭐ <span id="star-count">0</span></div>
+            <div class="hud-item progress-box">
+                <div id="progress-fill"></div>
             </div>
-            <div class="progress-track">
-                <div id="progress-bar"></div>
-            </div>
-        </header>
+            <div class="hud-item">Lv <span id="level-display">1</span></div>
+        </div>
 
-        <main id="stage">
-            <div id="question-card">
-                <h1 id="task-text">Loading...</h1>
+        <div id="game-world" class="candy-garden">
+            <div class="instruction-bubble">
+                <h2 id="task-prompt">Loading...</h2>
             </div>
-            
-            <div id="play-area">
-                </div>
-        </main>
 
-        <footer class="credits">
-            <p>Designed and Developed by <strong>Mohammad Ashraf Rather</strong></p>
-            <p>Teacher, PS Pethgam Wagoora</p>
-        </footer>
+            <div id="interactive-stage">
+                </div>
+        </div>
+
+        <div class="bottom-bar">
+            <div class="world-nav">
+                <button onclick="changeWorld('candy-garden')">🍭 Garden</button>
+                <button onclick="changeWorld('fruit-shop')">🍎 Shop</button>
+                <button onclick="changeWorld('toy-factory')">🧸 Factory</button>
+            </div>
+            <div class="credits">
+                Designed & Developed by <strong>Mohammad Ashraf Rather</strong><br>
+                Teacher, PS Pethgam Wagoora
+            </div>
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
