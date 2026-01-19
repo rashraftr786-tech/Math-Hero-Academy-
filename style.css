@@ -1,111 +1,94 @@
 :root {
-    --bg-sky: #87CEEB;
-    --accent-yellow: #FFEB3B;
-    --text-dark: #2C3E50;
+    --pink: #ff6b81;
+    --brown: #5d4037;
+    --grass: #2ecc71;
 }
 
 body, html {
     margin: 0;
     padding: 0;
+    height: 100%;
     overflow: hidden;
-    font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+    font-family: 'Arial Rounded MT Bold', sans-serif;
 }
 
 #game-container {
-    width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--bg-sky);
-    transition: 0.8s all ease-in-out;
+    background-color: #87CEEB; /* Sky Blue */
+    background: linear-gradient(#87CEEB, #e1f5fe);
 }
 
-/* Theme Backgrounds */
-.theme-candy-garden { background: linear-gradient(#D1F2EB, #ABEBC6); }
-.theme-fruit-shop { background: linear-gradient(#FEF9E7, #F9E79F); }
+/* Garden Background Elements */
+.theme-candy-garden #stage {
+    background-image: url('https://img.freepik.com/free-vector/nature-forest-landscape-background_1308-72643.jpg'); /* Substitute with local garden image */
+    background-size: cover;
+    background-position: bottom;
+}
 
-/* Header & Stats */
-.game-header {
-    background: rgba(255, 255, 255, 0.8);
-    padding: 1rem;
+.game-ui {
+    padding: 10px;
+    background: rgba(255,255,255,0.9);
+    z-index: 10;
+}
+
+.top-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    border-bottom: 5px solid rgba(0,0,0,0.1);
+    margin-bottom: 10px;
 }
 
-.stat-card {
-    font-size: 2rem;
-    font-weight: bold;
+#question-card {
     background: white;
-    padding: 0.5rem 1.5rem;
-    border-radius: 50px;
-    box-shadow: 0 4px 0 #ddd;
-}
-
-.progress-wrapper {
-    width: 300px;
-    height: 25px;
-    background: #eee;
+    margin: 10px auto;
+    padding: 15px;
     border-radius: 20px;
-    margin-left: 1rem;
-    overflow: hidden;
+    width: 80%;
+    text-align: center;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+    border: 4px solid var(--pink);
 }
 
-#progress-bar {
-    width: 10%;
-    height: 100%;
-    background: #4CAF50;
-    transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+#task-text {
+    font-size: 1.8rem;
+    margin: 0;
+    color: var(--brown);
 }
 
-/* Play Area */
 #play-area {
     flex-grow: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    position: relative;
+    justify-content: space-evenly;
 }
-
-/* SENSORY ELEMENTS: Large & Bouncy */
-.game-object {
-    font-size: 6rem; /* Huge icons for sensory appeal */
-    cursor: grab;
-    transition: transform 0.2s;
-    filter: drop-shadow(5px 5px 0px rgba(0,0,0,0.1));
-    user-select: none;
-    margin: 1rem;
-}
-
-.game-object:active { transform: scale(1.4); cursor: grabbing; }
 
 .basket-zone {
-    width: 350px;
-    height: 250px;
-    border: 10px dashed #795548;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.3);
+    width: 280px;
+    height: 180px;
+    background: rgba(255,255,255,0.4);
+    border: 6px dashed var(--brown);
+    border-radius: 20px;
     display: flex;
     flex-wrap: wrap;
-    align-content: flex-start;
-    padding: 20px;
+    justify-content: center;
+    padding: 10px;
 }
 
-/* Animations */
-@keyframes bloom {
-    0% { transform: scale(0); rotate: -20deg; }
-    100% { transform: scale(1.2); rotate: 0deg; }
+.candy-obj {
+    font-size: 4rem; /* Massive for sensory appeal */
+    cursor: pointer;
+    filter: drop-shadow(2px 4px 0px rgba(0,0,0,0.2));
+    margin: 5px;
+    transition: transform 0.2s;
 }
 
-.bloom-animation { animation: bloom 0.6s forwards; font-size: 10rem !important; }
-
-/* Designer Credits Footer */
-.designer-credit {
-    background: rgba(255,255,255,0.9);
+.credits {
+    background: white;
     text-align: center;
-    padding: 1rem;
-    border-top: 4px solid #3498DB;
+    padding: 10px;
+    font-size: 0.8rem;
+    border-top: 3px solid var(--pink);
 }
-
-.designer-credit strong { color: #E74C3C; font-size: 1.2rem; }
+    
