@@ -2,39 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Adventure - PS Pethgam Wagoora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Math Garden - PS Pethgam Wagoora</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container" class="theme-candy-garden">
-        <header class="game-header">
-            <div class="stats">
-                <div class="stat-card">⭐ <span id="star-count">0</span></div>
-                <div class="progress-wrapper">
-                    <div id="progress-bar"></div>
+        <header class="game-ui">
+            <div class="top-row">
+                <div class="stat-bubble">⭐ <span id="star-count">0</span></div>
+                <div class="nav-buttons">
+                    <button onclick="switchWorld('candy-garden')">Garden</button>
+                    <button onclick="switchWorld('fruit-shop')">Shop</button>
                 </div>
             </div>
-            <nav class="world-nav">
-                <button onclick="switchWorld('candy-garden')">🍭 Garden</button>
-                <button onclick="switchWorld('fruit-shop')">🍎 Shop</button>
-                <button onclick="switchWorld('toy-factory')">🧸 Factory</button>
-                <button onclick="switchWorld('underwater')">🐠 Ocean</button>
-            </nav>
+            <div class="progress-track">
+                <div id="progress-bar"></div>
+            </div>
         </header>
 
-        <main id="game-world">
-            <h1 id="task-instruction">Loading Adventure...</h1>
+        <main id="stage">
+            <div id="question-card">
+                <h1 id="task-text">Loading...</h1>
+            </div>
+            
             <div id="play-area">
                 </div>
         </main>
 
-        <footer class="designer-credit">
+        <footer class="credits">
             <p>Designed and Developed by <strong>Mohammad Ashraf Rather</strong></p>
             <p>Teacher, PS Pethgam Wagoora</p>
         </footer>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
