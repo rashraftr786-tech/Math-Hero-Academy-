@@ -3,24 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Adventure - PS Pethgam Wagoora</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Math Kids Academy 🌟</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
-<body class="home-bg">
-    <div id="app">
-        <header class="main-header">
-            <h1>Math Adventure World</h1>
-            <p>Teacher: Mohammad Ashraf Rather</p>
-        </header>
+<body>
 
-        <div class="menu-grid">
-            <a href="addition.html" class="card add">🌈 Addition<br><span>(Nursery - Grade 3)</span></a>
-            <a href="subtraction.html" class="card sub">🍎 Subtraction<br><span>(Nursery - Grade 3)</span></a>
-            <a href="multiplication.html" class="card mul">🧸 Multiplication<br><span>(Nursery - Grade 3)</span></a>
-            <a href="division.html" class="card div">🐠 Division<br><span>(Nursery - Grade 3)</span></a>
-        </div>
+    <div id="app-container">
+        <section id="home-screen" class="screen">
+            <h1 class="bounce">Math Kids Academy 🎨</h1>
+            <div class="menu-grid">
+                <button class="menu-btn" onclick="showLevels('addition')">➕ Addition</button>
+                <button class="menu-btn" onclick="showLevels('subtraction')">➖ Subtraction</button>
+                <button class="menu-btn" onclick="showLevels('multiplication')">✖ Multiplication</button>
+                <button class="menu-btn" onclick="showLevels('division')">➗ Division</button>
+                <button class="menu-btn" onclick="showTables()">🔢 Tables</button>
+                <button class="menu-btn" onclick="showLevels('fractions')">🍰 Fractions</button>
+            </div>
+        </section>
+
+        <section id="level-screen" class="screen hidden">
+            <button class="back-btn" onclick="showHome()">⬅ Back</button>
+            <h2 id="op-title">Select Level</h2>
+            <div id="level-buttons" class="menu-grid"></div>
+        </section>
+
+        <section id="game-screen" class="screen hidden">
+            <div class="stats">
+                <span>Level: <span id="current-level-name"></span></span>
+                <div class="progress-container"><div id="progress-bar"></div></div>
+                <span>Score: <span id="score">0</span>/15</span>
+            </div>
+            
+            <div id="visual-area"></div>
+            
+            <div class="question-container">
+                <div id="question-text"></div>
+                <div id="answer-zone">
+                    <input type="number" id="answer-input" placeholder="?">
+                    <button id="submit-btn" onclick="checkAnswer()">Go!</button>
+                </div>
+                <div id="options-zone" class="hidden"></div>
+            </div>
+        </section>
+
+        <section id="result-screen" class="screen hidden">
+            <div class="card">
+                <h1 id="result-text">Well Done! 🎉</h1>
+                <p>Final Score: <span id="final-score"></span>/15</p>
+                <button class="menu-btn" onclick="showHome()">Home</button>
+                <button class="menu-btn" id="next-lvl-btn">Next Level</button>
+            </div>
+        </section>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
-
-    
