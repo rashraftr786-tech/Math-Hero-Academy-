@@ -3,193 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Math Kids Academy 🌟</title>
+    <title>3D Video Math World 🚀</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary: #FF6B6B; 
-            --secondary: #4ECDC4; 
-            --accent: #FFE66D;
-            --bg: #e0e5ec; /* Neumorphic background color */
-            --white: #ffffff;
-            --shadow-light: #ffffff;
-            --shadow-dark: #a3b1c6;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --btn-add: #ff4757; --btn-sub: #2ed573; --btn-mul: #1e90ff;
+            --btn-div: #ffa502; --btn-tab: #e056fd; --btn-frac: #f9ca24;
+            --panel-bg: rgba(255, 255, 255, 0.15);
         }
 
-        body { 
-            margin: 0; 
-            font-family: 'Comic Sans MS', cursive, sans-serif; 
-            background: var(--bg); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            perspective: 1000px; /* Essential for 3D effects */
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow: hidden; perspective: 1200px;
         }
 
-        /* 3D Floating Container */
-        #app-container { 
-            width: 95%; 
-            max-width: 500px; 
-            background: var(--bg); 
-            border-radius: 40px; 
-            padding: 30px; 
-            box-shadow: 20px 20px 60px var(--shadow-dark), 
-                       -20px -20px 60px var(--shadow-light); 
-            text-align: center; 
-            position: relative;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 3D Main Stage */
+        #app-container {
+            width: 90%; max-width: 480px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.2);
+            text-align: center;
+            transform: rotateX(10deg);
             transform-style: preserve-3d;
-            animation: floatContainer 6s ease-in-out infinite;
+            color: white;
         }
 
-        @keyframes floatContainer {
-            0%, 100% { transform: translateY(0) rotateX(2deg); }
-            50% { transform: translateY(-15px) rotateX(-2deg); }
+        h1 {
+            font-size: 2.5rem; text-transform: uppercase;
+            text-shadow: 0 5px 0 #4834d4, 0 10px 20px rgba(0,0,0,0.4);
+            margin-bottom: 30px; transform: translateZ(50px);
         }
 
-        h1 { 
-            text-shadow: 2px 4px 4px rgba(0,0,0,0.1);
-            transform: translateZ(30px); /* Lifts text off the card */
+        /* 3D Button Figures */
+        .menu-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 20px; transform-style: preserve-3d;
         }
 
-        .menu-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 25px; 
-            margin-top: 20px; 
+        .menu-btn {
+            position: relative; border: none; cursor: pointer;
+            padding: 25px 10px; border-radius: 20px;
+            font-size: 1.2rem; font-weight: 900; color: white;
+            text-transform: uppercase; transition: 0.3s;
             transform-style: preserve-3d;
-        }
-
-        /* 3D Neumorphic Buttons */
-        .menu-btn { 
-            background: var(--bg); 
-            color: #444; 
-            border: none; 
-            padding: 20px; 
-            border-radius: 25px; 
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            cursor: pointer; 
-            box-shadow: 6px 6px 12px var(--shadow-dark), 
-                       -6px -6px 12px var(--shadow-light);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
             transform: translateZ(20px);
         }
 
-        /* Hover and Click 3D Interaction */
-        .menu-btn:hover { 
-            transform: translateZ(40px) scale(1.05); 
-            box-shadow: 10px 10px 20px var(--shadow-dark), 
-                        -10px -10px 20px var(--shadow-light);
-            color: var(--primary);
+        /* 3D Block Effect */
+        .btn-add { background: var(--btn-add); box-shadow: 0 10px 0 #b33939; }
+        .btn-sub { background: var(--btn-sub); box-shadow: 0 10px 0 #218c74; }
+        .btn-mul { background: var(--btn-mul); box-shadow: 0 10px 0 #227093; }
+        .btn-div { background: var(--btn-div); box-shadow: 0 10px 0 #cc8e35; }
+        .btn-tab { background: var(--btn-tab); box-shadow: 0 10px 0 #8e44ad; }
+        .btn-frac { background: var(--btn-frac); box-shadow: 0 10px 0 #f39c12; color: #333; }
+
+        .menu-btn:hover {
+            transform: translateZ(40px) translateY(-5px);
+            filter: brightness(1.1);
         }
 
-        .menu-btn:active { 
-            transform: translateZ(5px) scale(0.95);
-            box-shadow: inset 4px 4px 8px var(--shadow-dark), 
-                        inset -4px -4px 8px var(--shadow-light);
+        .menu-btn:active {
+            transform: translateZ(10px) translateY(5px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.5);
         }
 
-        /* 3D Glass Look for Game Elements */
-        #game-screen, #result-screen, #level-screen {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 30px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        /* 3D Visual Figures Area */
+        .visual-area {
+            height: 120px; display: flex; justify-content: center; align-items: center;
+            font-size: 3rem; margin: 20px 0;
+            transform-style: preserve-3d;
         }
 
-        .visual-area { 
-            font-size: 2.5rem; 
-            margin: 20px 0; 
-            filter: drop-shadow(0 10px 5px rgba(0,0,0,0.1));
-            animation: bounceIn 1s infinite alternate;
+        .figure-3d {
+            display: inline-block; margin: 5px;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));
+            animation: bounce 2s infinite ease-in-out;
         }
 
-        @keyframes bounceIn {
-            from { transform: scale(1) translateZ(10px); }
-            to { transform: scale(1.1) translateZ(30px); }
+        @keyframes bounce {
+            0%, 100% { transform: translateZ(30px) translateY(0); }
+            50% { transform: translateZ(60px) translateY(-20px) rotate(10deg); }
         }
 
-        input { 
-            width: 120px; 
-            padding: 15px; 
-            font-size: 2rem; 
-            border-radius: 20px; 
-            border: none;
-            background: var(--bg);
-            box-shadow: inset 6px 6px 12px var(--shadow-dark), 
-                        inset -6px -6px 12px var(--shadow-light);
-            text-align: center; 
-            outline: none;
-            color: var(--primary);
-        }
-
-        .fraction-ui { 
-            display: inline-block; 
-            padding: 10px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+        /* Input 3D Box */
+        input {
+            background: rgba(255,255,255,0.2);
+            border: 3px solid white; border-radius: 20px;
+            color: white; font-size: 2.5rem; width: 140px;
+            padding: 10px; text-align: center; outline: none;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .hidden { display: none !important; }
 
-        @keyframes shake { 
-            0%, 100% { transform: rotateY(0); } 
-            25% { transform: rotateY(-15deg); } 
-            75% { transform: rotateY(15deg); } 
+        #level-screen, #game-screen, #result-screen {
+            animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        .shake { animation: shake 0.4s; }
 
+        @keyframes slideIn {
+            from { transform: translateZ(-200px) scale(0.5); opacity: 0; }
+            to { transform: translateZ(0) scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
 <div id="app-container">
     <div id="home-screen">
-        <h1>Math Academy 🌟</h1>
+        <h1>MATH WORLD 🚀</h1>
         <div class="menu-grid">
-            <button class="menu-btn" onclick="showLevels('addition')">➕ Addition</button>
-            <button class="menu-btn" onclick="showLevels('subtraction')">➖ Subtraction</button>
-            <button class="menu-btn" onclick="showLevels('multiplication')">✖ Multiply</button>
-            <button class="menu-btn" onclick="showLevels('division')">➗ Division</button>
-            <button class="menu-btn" onclick="showLevels('tables')">🔢 Tables</button>
-            <button class="menu-btn" onclick="showLevels('fractions')">🍰 Fractions</button>
+            <button class="menu-btn btn-add" onclick="showLevels('addition')">➕ ADD</button>
+            <button class="menu-btn btn-sub" onclick="showLevels('subtraction')">➖ SUB</button>
+            <button class="menu-btn btn-mul" onclick="showLevels('multiplication')">✖ MUL</button>
+            <button class="menu-btn btn-div" onclick="showLevels('division')">➗ DIV</button>
+            <button class="menu-btn btn-tab" onclick="showLevels('tables')">🔢 TABLES</button>
+            <button class="menu-btn btn-frac" onclick="showLevels('fractions')">🍰 FRAC</button>
         </div>
     </div>
 
     <div id="level-screen" class="hidden">
-        <button onclick="goHome()" class="menu-btn" style="padding: 10px; margin-bottom: 20px;">⬅ Back</button>
-        <h2 id="op-name">Level Selection</h2>
+        <button onclick="goHome()" style="background:none; border:2px solid white; color:white; border-radius:10px; padding:10px; cursor:pointer; margin-bottom:20px;">⬅ EXIT</button>
+        <h2 id="op-name">SELECT MISSION</h2>
         <div class="menu-grid" id="level-buttons"></div>
     </div>
 
     <div id="game-screen" class="hidden">
-        <div style="display:flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px;">
-            <span id="display-lvl">Level</span>
-            <span>Q: <span id="q-idx">1</span>/15</span>
+        <div style="display:flex; justify-content: space-between; font-weight:bold; margin-bottom:10px;">
+            <span id="display-lvl">LVL</span>
+            <span>QUEST: <span id="q-idx">1</span>/15</span>
         </div>
         <div id="visual-box" class="visual-area"></div>
-        <h2 id="question-text">Question</h2>
+        <h2 id="question-text" style="font-size:2rem; text-shadow:0 3px 10px rgba(0,0,0,0.5)">?</h2>
         <input type="number" id="user-input" inputmode="numeric">
         <br><br>
-        <button class="menu-btn" style="width:100%; color: var(--primary);" onclick="checkAnswer()">CHECK ANSWER</button>
+        <button class="menu-btn btn-add" style="width:100%" onclick="checkAnswer()">SUBMIT</button>
     </div>
 
     <div id="result-screen" class="hidden">
-        <h1 id="res-title">Well Done! 🎉</h1>
-        <p style="font-size:1.5rem">Final Score: <span id="final-score">0</span>/15</p>
-        <button class="menu-btn" style="width:100%" onclick="goHome()">Play Again</button>
+        <h1 id="res-title">FINISHED! 🎉</h1>
+        <p style="font-size:2rem">SCORE: <span id="final-score">0</span>/15</p>
+        <button class="menu-btn btn-mul" style="width:100%" onclick="goHome()">REPLAY</button>
     </div>
 </div>
 
 <script>
-    /* JavaScript logic remains identical to preserve the 15-question structure and levels */
+    // Keeping your logic intact
     let currentOp, currentLvl, score, qCount, ans, lvlIdx;
     const lvls = ["Nursery", "LKG", "UKG", "Grade 1", "Grade 2", "Grade 3"];
 
@@ -202,12 +176,12 @@
         currentOp = op;
         document.getElementById('home-screen').classList.add('hidden');
         document.getElementById('level-screen').classList.remove('hidden');
-        document.getElementById('op-name').innerText = op.toUpperCase();
+        document.getElementById('op-name').innerText = op.toUpperCase() + " MISSION";
         const grid = document.getElementById('level-buttons');
         grid.innerHTML = '';
         lvls.forEach((l, i) => {
             const btn = document.createElement('button');
-            btn.className = 'menu-btn';
+            btn.className = 'menu-btn btn-sub';
             btn.innerText = l;
             btn.onclick = () => startGame(l, i);
             grid.appendChild(btn);
@@ -234,10 +208,11 @@
         let n1, n2, v = document.getElementById('visual-box'), q = document.getElementById('question-text');
         v.innerHTML = '';
         
+        // Operation Logic
         if (currentOp === 'addition') {
             n1 = (lvlIdx + 1) * 3 + Math.floor(Math.random() * 5); n2 = Math.floor(Math.random() * 5) + 1;
             ans = n1 + n2;
-            if (lvlIdx < 2) v.innerHTML = "🍎".repeat(n1) + " + " + "🍎".repeat(n2);
+            if (lvlIdx < 2) v.innerHTML = `<span class="figure-3d">🍎</span>`.repeat(n1) + " + " + `<span class="figure-3d">🍎</span>`.repeat(n2);
             q.innerText = `${n1} + ${n2} = ?`;
         } else if (currentOp === 'subtraction') {
             n1 = (lvlIdx + 1) * 5; n2 = Math.floor(Math.random() * n1);
@@ -254,12 +229,12 @@
         } else if (currentOp === 'tables') {
             n1 = Math.floor(Math.random() * 20) + 1; n2 = Math.floor(Math.random() * 10) + 1;
             ans = n1 * n2;
-            q.innerText = `${n1} × ${n2} = ?`;
+            q.innerText = `TABLE ${n1}: ${n1} × ${n2} = ?`;
         } else if (currentOp === 'fractions') {
             n2 = (lvlIdx < 3) ? 4 : 8; n1 = Math.floor(Math.random() * (n2 - 1)) + 1;
             ans = n1;
-            v.innerHTML = `<div class="fraction-ui"><div>${n1}</div><div style="border-top:2px solid black">${n2}</div></div>`;
-            q.innerText = `What is the top number?`;
+            v.innerHTML = `<div style="background:white; color:black; padding:10px; border-radius:10px;">${n1}/${n2}</div>`;
+            q.innerText = `What is the Numerator (top number)?`;
         }
         document.getElementById('user-input').focus();
     }
@@ -268,11 +243,11 @@
         const u = parseInt(document.getElementById('user-input').value);
         if (u === ans) {
             score++;
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.7 } });
             setTimeout(nextQuestion, 800);
         } else {
-            document.getElementById('app-container').classList.add('shake');
-            setTimeout(() => document.getElementById('app-container').classList.remove('shake'), 400);
+            document.getElementById('app-container').style.animation = 'shake 0.2s 2';
+            setTimeout(() => document.getElementById('app-container').style.animation = '', 400);
         }
     }
 
@@ -284,5 +259,5 @@
 </script>
 </body>
 </html>
-
+                                ans = n1 * n2;
             
