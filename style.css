@@ -1,37 +1,102 @@
-/* Container for items before they are moved */
-.item-source-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 20px;
-    max-width: 90%;
+:root {
+    --primary: #FF6B6B;
+    --secondary: #4ECDC4;
+    --accent: #FFE66D;
+    --bg: #F7FFF7;
 }
 
-/* The Basket - Now with Auto-Wrap */
-.target-basket {
-    width: 90%;
-    max-width: 400px;
-    min-height: 200px;
-    background: rgba(255, 255, 255, 0.25);
-    border: 6px dashed #ffffff;
-    border-radius: 30px 30px 80px 80px;
+body {
+    margin: 0;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: var(--bg);
     display: flex;
-    flex-wrap: wrap; /* CRITICAL: Allows items to wrap into new rows */
-    align-content: flex-start;
     justify-content: center;
-    padding: 20px;
-    gap: 8px;
-    margin-top: 20px;
-    box-shadow: inset 0 10px 20px rgba(0,0,0,0.1);
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
 }
 
-.math-item {
-    font-size: 3rem; /* Scaled for mobile */
+#app-container {
+    width: 95%;
+    max-width: 800px;
+    height: 90vh;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 20px 0 #ddd;
+    position: relative;
+    padding: 20px;
+    text-align: center;
+}
+
+.screen { transition: 0.5s ease; }
+.hidden { display: none; }
+
+/* Animations */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pop {
+    0% { transform: scale(0.8); }
+    80% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.bounce { animation: bounce 2s infinite; color: var(--primary); }
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.menu-btn {
+    background: var(--secondary);
+    border: none;
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+    font-size: 1.5rem;
     cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 0 #3ba39b;
+    transition: 0.2s;
 }
 
-.math-item:active {
-    transform: scale(1.4);
+.menu-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 #3ba39b;
+}
+
+.visual-obj {
+    display: inline-block;
+    font-size: 3rem;
+    margin: 5px;
+    animation: pop 0.5s ease-out;
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+#progress-bar {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: 0.3s;
+    border-radius: 10px;
+}
+.progress-container {
+    width: 200px;
+    height: 20px;
+    background: #eee;
+    margin: 10px auto;
+    border-radius: 10px;
 }
