@@ -3,96 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Grade 3 Math - PS Pethgam Wagoora</title>
+    <title>Math Adventure - PS Pethgam Wagoora</title>
     <style>
         :root {
-            --sky: #00d2ff; --grass: #3a7bd5; --pink: #ff4081;
-            --gold: #FFD700; --white: #ffffff;
+            --sky: #87CEEB; --grass: #2ecc71; --pink: #ff4757;
         }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
-        #app-shell { display: flex; flex-direction: column; height: 100vh; width: 100vw; transition: background 0.5s; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Arial Rounded MT Bold', sans-serif; background: var(--sky); color: #2f3542; }
         
         /* THEMES */
-        .theme-home { background: #6a11cb; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }
-        .theme-addition { background: #11998e; background: linear-gradient(to bottom, #38ef7d, #11998e); }
-        .theme-subtraction { background: #f12711; background: linear-gradient(to bottom, #f5af19, #f12711); }
-        .theme-multiplication { background: #8e2de2; background: linear-gradient(to bottom, #4a00e0, #8e2de2); }
-        .theme-division { background: #00c6ff; background: linear-gradient(to bottom, #0072ff, #00c6ff); }
+        .theme-home { background: #f1c40f; }
+        .theme-addition { background: linear-gradient(#87CEEB, #2ecc71); }
+        .theme-subtraction { background: linear-gradient(#ffa502, #7d5a50); }
+        .theme-multiplication { background: linear-gradient(#a29bfe, #6c5ce7); }
+        .theme-division { background: linear-gradient(#74b9ff, #0984e3); }
 
-        /* HUD & SCREENS */
-        .header { background: rgba(255,255,255,0.9); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid rgba(0,0,0,0.1); }
-        .screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .hidden { display: none !important; }
+        /* SCROLLABLE LAYOUT FIX */
+        #app-container { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .game-header { background: white; padding: 10px; display: flex; justify-content: space-between; border-bottom: 4px solid #ddd; z-index: 100; }
+        .main-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; }
 
-        /* MENU BUTTONS */
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 500px; }
-        .menu-btn { height: 120px; border: none; border-radius: 20px; color: white; font-size: 1.3rem; font-weight: bold; cursor: pointer; box-shadow: 0 8px 0 rgba(0,0,0,0.2); }
-        .btn-add { background: #ff4081; } .btn-sub { background: #ff9800; }
-        .btn-mul { background: #9c27b0; } .btn-div { background: #00bcd4; }
+        /* MENU CARDS */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 500px; }
+        .menu-card { height: 120px; border: none; border-radius: 20px; color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 6px 0 rgba(0,0,0,0.2); }
+        .btn-add { background: #ff4757; } .btn-sub { background: #2ed573; }
+        .btn-mul { background: #ffa502; } .btn-div { background: #1e90ff; }
 
-        /* GRADE 3 QUESTION CARD */
-        .card { background: var(--white); border-radius: 30px; padding: 30px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--pink); }
-        .math-problem { font-size: 3.5rem; font-weight: 900; margin: 20px 0; letter-spacing: 5px; color: #2c3e50; }
+        /* PLAY CARDS */
+        .math-card { background: white; border-radius: 30px; padding: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-bottom: 8px solid #ddd; margin-bottom: 20px; }
+        .math-text { font-size: 2.8rem; margin: 10px 0; color: #2f3542; letter-spacing: 2px; }
         
-        /* NUMPAD */
-        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; width: 100%; }
-        .key { padding: 15px; font-size: 1.5rem; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 12px; cursor: pointer; font-weight: bold; }
-        .key:active { background: #e2e6ea; transform: scale(0.95); }
-        .submit-btn { grid-column: span 3; padding: 20px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 1.5rem; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        /* VISUAL AIDS (Kindergarten Level Help) */
+        .visual-aid { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; background: #f1f2f6; border-radius: 15px; padding: 10px; margin: 10px 0; min-height: 50px; }
+        .visual-item { font-size: 2rem; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1)); }
 
-        /* OVERLAYS */
-        .popup { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; color: white; }
-        .footer { background: white; padding: 10px; text-align: center; font-size: 0.9rem; }
+        /* NUMPAD */
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 300px; margin: 15px auto; }
+        .num-key { padding: 15px; background: #dfe4ea; border: none; border-radius: 12px; font-size: 1.4rem; font-weight: bold; cursor: pointer; }
+        .submit-btn { width: 100%; max-width: 300px; padding: 18px; background: #2ecc71; color: white; border: none; border-radius: 15px; font-size: 1.5rem; font-weight: bold; margin-top: 10px; box-shadow: 0 6px 0 #27ae60; cursor: pointer; }
+
+        /* CRACKER ANIMATION */
+        .cracker { position: fixed; pointer-events: none; width: 10px; height: 10px; border-radius: 50%; z-index: 999; }
+        @keyframes burst { 
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(20) translate(var(--x), var(--y)); opacity: 0; }
+        }
+
+        .hidden { display: none !important; }
+        .footer { padding: 15px; text-align: center; font-size: 0.8rem; background: white; border-top: 1px solid #ddd; }
     </style>
 </head>
 <body class="theme-home">
 
-<div id="app-shell">
-    <header class="header">
-        <div style="font-size: 1.5rem;">⭐ Stars: <span id="star-val">0</span></div>
-        <button onclick="navHome()" style="padding: 10px 20px; border-radius: 10px; border: 1px solid #ccc; font-weight: bold;">🏠 Home</button>
+<div id="app-container">
+    <header class="game-header">
+        <div style="font-size: 1.3rem;">⭐ Stars: <span id="star-count">0</span></div>
+        <button onclick="navHome()" style="padding: 8px 15px; border-radius: 10px; border: 1px solid #ccc; background: white; font-weight: bold;">🏠 Home</button>
     </header>
 
-    <section id="scr-home" class="screen">
-        <h1 style="color:white; text-align: center; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Math Adventure World<br><small>PS Pethgam Wagoora</small></h1>
-        <div class="menu-grid">
-            <button class="menu-btn btn-add" onclick="initGame('addition')">➕ Addition<br>(Carry-over)</button>
-            <button class="menu-btn btn-sub" onclick="initGame('subtraction')">➖ Subtraction<br>(Borrowing)</button>
-            <button class="menu-btn btn-mul" onclick="initGame('multiplication')">✖ Multiplication<br>(Grade 3)</button>
-            <button class="menu-btn btn-div" onclick="initGame('division')">➗ Division<br>(Grade 3)</button>
-        </div>
-    </section>
-
-    <section id="scr-game" class="screen hidden">
-        <div class="card">
-            <div id="level-label" style="color: #666; font-weight: bold;">LEVEL 1</div>
-            <div id="problem-text" class="math-problem">24 + 18</div>
-            <input type="text" id="ans-input" readonly placeholder="?" style="width: 100%; height: 60px; font-size: 2.5rem; text-align: center; border: 2px solid #ddd; border-radius: 10px; color: var(--pink);">
-            
-            <div class="numpad">
-                <button class="key" onclick="press(1)">1</button><button class="key" onclick="press(2)">2</button><button class="key" onclick="press(3)">3</button>
-                <button class="key" onclick="press(4)">4</button><button class="key" onclick="press(5)">5</button><button class="key" onclick="press(6)">6</button>
-                <button class="key" onclick="press(7)">7</button><button class="key" onclick="press(8)">8</button><button class="key" onclick="press(9)">9</button>
-                <button class="key" style="background:#ffc107" onclick="press('C')">C</button><button class="key" onclick="press(0)">0</button>
-                <button class="submit-btn" onclick="verify()">SUBMIT ANSWER ✅</button>
+    <div class="main-scroll">
+        <section id="scr-home">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 70px;">✏️</div>
+                <h2 style="color: white; text-shadow: 2px 2px #00000044;">Math Adventure World</h2>
+                <p style="background: white; padding: 10px; border-radius: 10px;">PS Pethgam Wagoora</p>
             </div>
-        </div>
-    </section>
+            <div class="menu-grid">
+                <button class="menu-card btn-add" onclick="start('addition')">🌈 Addition</button>
+                <button class="menu-card btn-sub" onclick="start('subtraction')">🍎 Subtraction</button>
+                <button class="menu-card btn-mul" onclick="start('multiplication')">🧸 Multiplication</button>
+                <button class="menu-card btn-div" onclick="start('division')">🐠 Division</button>
+            </div>
+        </section>
+
+        <section id="scr-game" class="hidden" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <div class="math-card">
+                <div id="level-name" style="color: #a4b0be; font-size: 0.9rem;">LEVEL 1</div>
+                <div id="math-display" class="math-text">25 + 15</div>
+                
+                <p style="font-size: 0.8rem; color: #747d8c;">(Visual Aid for Counting)</p>
+                <div class="visual-aid" id="visual-aid-box"></div>
+                
+                <input type="number" id="ans-input" readonly placeholder="?" style="width: 150px; height: 60px; font-size: 2.2rem; text-align: center; border: 3px solid #ff4757; border-radius: 15px; color: #ff4757;">
+            </div>
+
+            <div class="numpad">
+                <button class="num-key" onclick="key(1)">1</button>
+                <button class="num-key" onclick="key(2)">2</button>
+                <button class="num-key" onclick="key(3)">3</button>
+                <button class="num-key" onclick="key(4)">4</button>
+                <button class="num-key" onclick="key(5)">5</button>
+                <button class="num-key" onclick="key(6)">6</button>
+                <button class="num-key" onclick="key(7)">7</button>
+                <button class="num-key" onclick="key(8)">8</button>
+                <button class="num-key" onclick="key(9)">9</button>
+                <button class="num-key" style="background:#ffa502" onclick="key('C')">C</button>
+                <button class="num-key" onclick="key(0)">0</button>
+            </div>
+
+            <button class="submit-btn" onclick="check()">SUBMIT ANSWER ✅</button>
+            <div style="height: 50px;"></div> </section>
+    </div>
 
     <footer class="footer">
-        Designed & Developed by <strong>Mohammad Ashraf Rather</strong> | Teacher, PS Pethgam Wagoora
+        Designed & Developed by <b>Mohammad Ashraf Rather</b> | PS Pethgam Wagoora
     </footer>
 </div>
 
-<div id="win-overlay" class="popup hidden">
-    <h1 style="font-size: 5rem;">🏆</h1>
-    <h1>Excellent!</h1>
-    <p style="font-size: 1.2rem;">That's correct 3rd Grade logic!</p>
-    <button onclick="nextLevel()" style="padding: 20px 50px; background: #28a745; color: white; border: none; border-radius: 20px; font-size: 1.5rem; cursor: pointer;">Play Next Level ➔</button>
-</div>
-
 <script>
-    let gState = { stars: 0, mode: '', level: 1, solution: 0 };
+    let g = { stars: 0, mode: '', level: 1, result: 0 };
 
     function navHome() {
         document.getElementById('scr-home').classList.remove('hidden');
@@ -100,79 +118,75 @@
         document.body.className = 'theme-home';
     }
 
-    function initGame(m) {
-        gState.mode = m;
-        gState.level = 1;
+    function start(mode) {
+        g.mode = mode; g.level = 1;
         document.getElementById('scr-home').classList.add('hidden');
         document.getElementById('scr-game').classList.remove('hidden');
-        document.body.className = 'theme-' + m;
-        buildProblem();
+        document.body.className = 'theme-' + mode;
+        build();
     }
 
-    function press(v) {
-        const inp = document.getElementById('ans-input');
-        if(v === 'C') inp.value = '';
-        else if(inp.value.length < 4) inp.value += v;
+    function key(v) {
+        const i = document.getElementById('ans-input');
+        if(v === 'C') i.value = '';
+        else if(i.value.length < 4) i.value += v;
     }
 
-    function buildProblem() {
-        const pText = document.getElementById('problem-text');
-        const lLabel = document.getElementById('level-label');
+    function build() {
+        const box = document.getElementById('visual-aid-box');
+        const disp = document.getElementById('math-display');
         document.getElementById('ans-input').value = '';
-        document.getElementById('win-overlay').classList.add('hidden');
+        box.innerHTML = '';
+        
+        let n1, n2, icon;
+        document.getElementById('level-name').innerText = `${g.mode.toUpperCase()} - LEVEL ${g.level}`;
 
-        let a, b;
-        lLabel.innerText = `${gState.mode.toUpperCase()} - LEVEL ${gState.level}`;
-
-        switch(gState.mode) {
-            case 'addition':
-                // Grade 3: 2-digit with carrying
-                a = 15 + Math.floor(Math.random() * 40);
-                b = 15 + Math.floor(Math.random() * 40);
-                gState.solution = a + b;
-                pText.innerText = `${a} + ${b}`;
-                break;
-            case 'subtraction':
-                // Grade 3: 2-digit with borrowing
-                a = 50 + Math.floor(Math.random() * 49);
-                b = 15 + Math.floor(Math.random() * 30);
-                gState.solution = a - b;
-                pText.innerText = `${a} - ${b}`;
-                break;
-            case 'multiplication':
-                // Grade 3: Multiplication tables 2-9
-                a = 2 + Math.floor(Math.random() * 7);
-                b = 3 + Math.floor(Math.random() * 7);
-                gState.solution = a * b;
-                pText.innerText = `${a} × ${b}`;
-                break;
-            case 'division':
-                // Grade 3: Simple division (inverse of multiplication)
-                b = 2 + Math.floor(Math.random() * 4);
-                gState.solution = 2 + Math.floor(Math.random() * 5);
-                a = b * gState.solution;
-                pText.innerText = `${a} ÷ ${b}`;
-                break;
-        }
-    }
-
-    function verify() {
-        const userVal = parseInt(document.getElementById('ans-input').value);
-        if(userVal === gState.solution) {
-            document.getElementById('win-overlay').classList.remove('hidden');
-            gState.stars += (10 * gState.level);
-            document.getElementById('star-val').innerText = gState.stars;
+        if(g.mode === 'addition') {
+            n1 = 5 + (g.level * 2); n2 = 4 + g.level; icon = '🍭';
+            g.result = n1 + n2; disp.innerText = `${n1} + ${n2}`;
+        } else if(g.mode === 'subtraction') {
+            n1 = 10 + g.level; n2 = 2 + g.level; icon = '🍎';
+            g.result = n1 - n2; disp.innerText = `${n1} - ${n2}`;
+        } else if(g.mode === 'multiplication') {
+            n1 = 2 + Math.floor(g.level/2); n2 = 3; icon = '🧸';
+            g.result = n1 * n2; disp.innerText = `${n1} × ${n2}`;
         } else {
-            alert("Oops! Check your math and try again.");
-            document.getElementById('ans-input').value = '';
+            n2 = 2; g.result = 2 + g.level; icon = '🐠';
+            n1 = n2 * g.result; disp.innerText = `${n1} ÷ ${n2}`;
+        }
+
+        // Kindergarten help: Draw icons
+        for(let i=0; i<n1; i++) {
+            let s = document.createElement('span'); s.className='visual-item'; s.innerText=icon; box.appendChild(s);
         }
     }
 
-    function nextLevel() {
-        gState.level++;
-        buildProblem();
+    function check() {
+        const val = parseInt(document.getElementById('ans-input').value);
+        if(val === g.result) {
+            fireCrackers();
+            g.stars += 20;
+            document.getElementById('star-count').innerText = g.stars;
+            setTimeout(() => { g.level++; build(); }, 1500);
+        } else {
+            alert("Oops! Try again.");
+        }
+    }
+
+    function fireCrackers() {
+        for(let i=0; i<30; i++) {
+            const div = document.createElement('div');
+            div.className = 'cracker';
+            div.style.left = '50%'; div.style.top = '50%';
+            div.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            div.style.setProperty('--x', (Math.random() - 0.5) * 400 + 'px');
+            div.style.setProperty('--y', (Math.random() - 0.5) * 400 + 'px');
+            div.style.animation = 'burst 1s forwards';
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 1000);
+        }
     }
 </script>
 </body>
 </html>
-                document.getElementById('level-title').innerText = "Subtraction (Borrowing)"
+                    
