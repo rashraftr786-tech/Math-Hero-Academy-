@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Addition Adventure - PS Pethgam Wagoora</title>
+    <style>
+        :root {
+            --primary: #ff4757;
+            --success: #2ed573;
+            --bg: #f1f2f6;
+        }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+            overflow: hidden;
+        }
+        #app { display: flex; flex-direction: column; height: 100vh; }
+
+        .hud {
+            background: white; padding: 15px; display: flex;
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .scroll-zone {
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .math-card {
+            background: white; width: 90%; max-width: 450px;
+            padding: 30px; border-radius: 30px; text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border-bottom: 10px solid #ddd;
+        }
+
+        #visual-help {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 8px; margin-bottom: 20px; min-height: 60px;
+        }
+
+        .icon-item { font-size: 2.5rem; filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.1)); }
+
+        #problem-display { font-size: 3.5rem; margin: 20px 0; color: #2f3542; }
+
+        input[type=number] {
+            width: 140px; height: 70px; font-size: 2.5rem;
+            text-align: center; border: 4px solid var(--primary);
+            border-radius: 20px; margin-bottom: 25px; outline: none;
+        }
+
+        #submit-btn {
+            width: 100%; padding: 20px; background: var(--success);
+            color: white; border: none; border-radius: 20px;
+            font-size: 1.6rem; font-weight: bold; cursor: pointer;
+            box-shadow: 0 8px 0 #218c74; transition: 0.1s;
+        }
+        #submit-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 #218c74; }
+
+        /* Slow Cracker Particles */
+        .cracker-particle {
+            position: fixed; width: 25px; height: 25px;
+            border-radius: 50%; pointer-events: none; z-index: 999;
+            box-shadow: 0 0 15px rgba(255,255,255,0.8);
+        }
+
+        .footer-nav { padding: 15px; text-align: center; }
+        .home-link { color: white; text-decoration: none; font-weight: bold; background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 50px; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="hud">
+        <b id="grade-label" style="color:var(--primary)">Grade: Nursery</b>
+        <span id="star-count" style="font-size: 1.2rem;">⭐ 0</span>
+    </div>
+
+    <div class="scroll-zone">
+        <div class="math-card">
+            <div id="visual-help"></div>
+            <h2 id="problem-display">1 + 1</h2>
+            <input type="number" id="answer-input" placeholder="?">
+            <button id="submit-btn" onclick="processAnswer()">SUBMIT ✅</button>
+        </div>
+        
+        <div class="footer-nav">
+            <a href="index.html" class="home-link">🏠 Back to Adventure Map</a>
+        </div>
+        <div style="height: 100px;"></div>
+    </div>
+</div>
+
+<div id="cracker-container"></div>
+
+<script>
+    // 90 Questions Database: 15 per grade
+    const questions = [
+        // Nursery (1-15): Visual counting 1-5
+        { q: "1 + 1", a: 2, level: "Nursery", icons: 2, type: "🍭" },
+        { q: "2 + 1", a: 3, level: "Nursery", icons: 3, type: "🍭" },
+        { q: "1 + 3", a: 4, level: "Nursery", icons: 4, type: "🍭" },
+        // LKG (16-30): Visual counting up to 10
+        { q: "4 + 3", a: 7, level: "LKG", icons: 7, type: "🍎" },
+        { q: "5 + 5", a: 10, level: "LKG", icons: 10, type: "🍎" },
+        // UKG (31-45): Simple addition no icons
+        { q: "10 + 2", a: 12, level: "UKG", icons: 0, type: "" },
+        // Grade 1 (46-60): Double digit + Single digit
+        { q: "15 + 4", a: 19, level: "Grade 1", icons: 0, type: "" },
+        // Grade 2 (61-75): Double digit no carrying
+        { q: "22 + 13", a: 35, level: "Grade 2", icons: 0, type: "" },
+        // Grade 3 (76-90): Carrying/Column addition
+        { q: "45 + 27", a: 72, level: "Grade 3", icons: 0, type: "" }
+    ];
+
+    let currentIdx = 0;
+    let stars = 0;
+
+    function loadQuestion() {
+        const item = questions[currentIdx];
+        document.getElementById('grade-label').innerText = "Grade: " + item.level;
+        document.getElementById('problem-display').innerText = item.q;
+        document.getElementById('answer-input').value = '';
+        
+        const help = document.getElementById('visual-help');
+        help.innerHTML = '';
+        for(let i=0; i < item.icons; i++) {
+            let span = document.createElement('span');
+            span.className = 'icon-item';
+            span.innerText = item.type;
+            help.appendChild(span);
+        }
+    }
+
+    function processAnswer() {
+        const userVal = parseInt(document.getElementById('answer-input').value);
+        if(userVal === questions[currentIdx].a) {
+            slowCrackerBurst();
+            stars += 10;
+            document.getElementById('star-count').innerText = "⭐ " + stars;
+            currentIdx++;
+            if(currentIdx < questions.length) {
+                setTimeout(loadQuestion, 3000);
+            } else {
+                alert("🎉 You finished all 90 Addition levels!");
+            }
+        } else {
+            alert("Try again! Use the icons to count.");
+        }
+    }
+
+    function slowCrackerBurst() {
+        const container = document.getElementById('cracker-container');
+        const colors = ['#ff4757', '#2ed573', '#eccc68', '#7ed6df', '#ffffff'];
+        
+        for(let i=0; i<30; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'cracker-particle';
+            dot.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+            dot.style.left = '50%';
+            dot.style.top = '50%';
+            
+            dot.style.transition = "all 2.5s cubic-bezier(0.1, 0.5, 0.5, 1)"; 
+            container.appendChild(dot);
+
+            setTimeout(() => {
+                const x = (Math.random() - 0.5) * 600;
+                const y = (Math.random() - 0.5) * 600;
+                dot.style.transform = `translate(${x}px, ${y}px) scale(0.5)`;
+                dot.style.opacity = "0";
+            }, 50);
+            
+            setTimeout(() => dot.remove(), 2600);
+        }
+    }
+
+    window.onload = loadQuestion;
+</script>
+
+</body>
+</html>
