@@ -1,111 +1,96 @@
-// Game State Manager
-let gameState = {
-    stars: 0,
-    currentZone: 'home',
-    levels: {
-        addition: 1,
-        subtraction: 1,
-        multiplication: 1,
-        division: 1
-    }
-};
-
-// Main Navigation: Responds to Button Clicks
-function startZone(zone) {
-    gameState.currentZone = zone;
-    
-    // UI Transitions
-    document.getElementById('home-page').classList.add('hidden');
-    document.getElementById('game-stage').classList.remove('hidden');
-    document.getElementById('success-overlay').classList.add('hidden');
-    
-    // Set Theme Class for Visuals
-    document.getElementById('master-container').className = 'theme-' + zone;
-    
-    generateChallenge();
-}
+const levels = ["Nursery", "LKG", "UKG", "Grade 1", "Grade 2", "Grade 3"];
+let currentOp = '';
+let currentLevel = 0;
+let currentQuestionIndex = 0;
+let score = 0;
+let correctAnswer = 0;
 
 function showHome() {
-    document.getElementById('home-page').classList.remove('hidden');
-    document.getElementById('game-stage').classList.add('hidden');
-    document.getElementById('master-container').className = '';
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById('home-screen').classList.remove('hidden');
 }
 
-// Level Logic Generator
-function generateChallenge() {
-    const area = document.getElementById('play-area');
-    const taskText = document.getElementById('task-text');
-    const zone = gameState.currentZone;
-    const currentLevel = gameState.levels[zone];
+function showLevels(op) {
+    currentOp = op;
+    document.getElementById('home-screen').classList.add('hidden');
+    document.getElementById('level-screen').classList.remove('hidden');
+    document.getElementById('op-title').innerText = op.toUpperCase();
     
-    area.innerHTML = ''; // Clear the stage completely
+    const container = document.getElementById('level-buttons');
+    container.innerHTML = '';
+    levels.forEach((lvl, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'menu-btn';
+        btn.innerText = lvl;
+        btn.onclick = () => startGame(index);
+        container.appendChild(btn);
+    });
+}
+
+function startGame(lvlIndex) {
+    currentLevel = lvlIndex;
+    currentQuestionIndex = 0;
+    score = 0;
+    document.getElementById('level-screen').classList.add('hidden');
+    document.getElementById('game-screen').classList.remove('hidden');
+    nextQuestion();
+}
+
+function generateAddition() {
+    let n1, n2;
+    switch(currentLevel) {
+        case 0: n1 = rand(1,3); n2 = rand(1,2); break; // Nursery
+        case 1: n1 = rand(1,5); n2 = rand(1,5); break; // LKG
+        case 5: n1 = rand(100, 500); n2 = rand(100, 400); break; // Grade 3
+        default: n1 = rand(1, 20); n2 = rand(1, 20);
+    }
+    return { n1, n2, ans: n1 + n2, sym: '+' };
+}
+
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1) + min); }
+
+function nextQuestion() {
+    if (currentQuestionIndex >= 15) return endGame();
     
-    let num1, num2, target, icon, operator;
-
-    // Difficulty Scaling Logic
-    switch(zone) {
-        case 'addition':
-            num1 = Math.floor(Math.random() * (currentLevel * 3)) + 1;
-            num2 = Math.floor(Math.random() * 5) + 1;
-            target = num1 + num2;
-            icon = '🍬';
-            operator = '+';
-            break;
-        case 'subtraction':
-            num1 = Math.floor(Math.random() * 5) + (currentLevel + 5);
-            num2 = Math.floor(Math.random() * currentLevel) + 2;
-            target = num1 - num2;
-            icon = '🍎';
-            operator = '-';
-            break;
-        // Add cases for multiplication/division here
+    let q;
+    if (currentOp === 'addition') q = generateAddition();
+    // (Similar generator functions for subtraction, multiplication, etc.)
+    
+    correctAnswer = q.ans;
+    document.getElementById('question-text').innerHTML = `<h1>${q.n1} ${q.sym} ${q.n2} = ?</h1>`;
+    document.getElementById('visual-area').innerHTML = '';
+    
+    // Add visual objects for lower levels
+    if (currentLevel < 2) {
+        for(let i=0; i<q.n1; i++) document.getElementById('visual-area').innerHTML += '<span class="visual-obj">🍎</span>';
+        document.getElementById('visual-area').innerHTML += '<span> + </span>';
+        for(let i=0; i<q.n2; i++) document.getElementById('visual-area').innerHTML += '<span class="visual-obj">🍎</span>';
     }
-
-    taskText.innerText = `Level ${currentLevel}: ${num1} ${operator} ${num2} = ?`;
-
-    renderPlaySpace(area, icon, target);
+    
+    document.getElementById('current-level-name').innerText = levels[currentLevel];
+    document.getElementById('progress-bar').style.width = `${(currentQuestionIndex/15)*100}%`;
+    document.getElementById('answer-input').value = '';
+    document.getElementById('answer-input').focus();
 }
 
-// Responsive Grid Rendering
-function renderPlaySpace(area, icon, target) {
-    const itemContainer = document.createElement('div');
-    itemContainer.className = 'item-source-grid'; // Defined in CSS for wrapping
-
-    const basket = document.createElement('div');
-    basket.className = 'target-basket';
-    basket.id = 'active-basket';
-
-    // Create the items for the child to click/tap
-    for (let i = 0; i < target; i++) {
-        const item = document.createElement('div');
-        item.className = 'math-item';
-        item.innerText = icon;
-        item.onclick = () => {
-            basket.appendChild(item);
-            checkWin(target);
-        };
-        itemContainer.appendChild(item);
-    }
-
-    area.appendChild(itemContainer);
-    area.appendChild(basket);
-}
-
-function checkWin(target) {
-    const basket = document.getElementById('active-basket');
-    if (basket.children.length === target) {
-        setTimeout(() => {
-            document.getElementById('success-overlay').classList.remove('hidden');
-            gameState.stars += 10;
-            document.getElementById('star-count').innerText = gameState.stars;
-            
-            // Advance the level for this specific operation
-            gameState.levels[gameState.currentZone]++;
-        }, 500);
+function checkAnswer() {
+    const userAns = parseInt(document.getElementById('answer-input').value);
+    const container = document.getElementById('game-screen');
+    
+    if (userAns === correctAnswer) {
+        score++;
+        document.getElementById('score').innerText = score;
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+        currentQuestionIndex++;
+        setTimeout(nextQuestion, 1000);
+    } else {
+        container.classList.add('shake');
+        setTimeout(() => container.classList.remove('shake'), 500);
     }
 }
 
-function nextLevel() {
-    document.getElementById('success-overlay').classList.add('hidden');
-    generateChallenge(); // Loads the next, harder level
+function endGame() {
+    document.getElementById('game-screen').classList.add('hidden');
+    document.getElementById('result-screen').classList.remove('hidden');
+    document.getElementById('final-score').innerText = score;
 }
